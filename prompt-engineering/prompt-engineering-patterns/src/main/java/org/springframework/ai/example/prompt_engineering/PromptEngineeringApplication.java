@@ -153,7 +153,7 @@ public class PromptEngineeringApplication {
 				unchecked. I wish there were more movies like this masterpiece.
 				Sentiment:
 				""")
-			.options(ChatOptions.builder().temperature(0.1).maxTokens(5).build())
+			.options(ChatOptions.builder().temperature(0.1).maxTokens(5))
 			.call()
 			.entity(Sentiment.class);
 
@@ -208,7 +208,7 @@ public class PromptEngineeringApplication {
 				// Increasing the token limit to accommodate the need for a longer
 				// response.
 				.maxTokens(250)
-				.build())
+				)
 			.call()
 			.content();
 
@@ -244,7 +244,7 @@ public class PromptEngineeringApplication {
 
 					Sentiment:
 					""")
-			.options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(5).build())
+			.options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(5))
 			.call()
 			.content();
 
@@ -285,7 +285,7 @@ public class PromptEngineeringApplication {
 				unchecked. It's so disturbing I couldn't watch it.
 
 				JSON Response:
-				""").options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024).build()).call().content();
+				""").options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024)).call().content();
 
 		System.out.println("Output: " + movieReview);
 
@@ -317,7 +317,7 @@ public class PromptEngineeringApplication {
 
 					JSON Response:
 					""")
-			.options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024).build())
+			.options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024))
 			.call()
 			.entity(MovieReviews.class);
 
@@ -337,7 +337,7 @@ public class PromptEngineeringApplication {
 				""").user("""
 				My suggestion: "I am in Amsterdam and I want to visit only museums."
 				Travel Suggestions:
-				""").options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024).build()).call().content();
+				""").options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024)).call().content();
 
 		System.out.println("Output: " + movieReview);
 
@@ -357,7 +357,7 @@ public class PromptEngineeringApplication {
 				""").user("""
 				My suggestion: "I am in Amsterdam and I want to visit only museums."
 				Travel Suggestions:
-				""").options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024).build()).call().content();
+				""").options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024)).call().content();
 
 		System.out.println("Output: " + movieReview);
 	}
@@ -374,7 +374,7 @@ public class PromptEngineeringApplication {
 
 					Context: {context}
 					""").param("context", "You are writing for a blog about retro 80's arcade video games."))
-			.options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024).build())
+			.options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024))
 			.call()
 			.content();
 
@@ -387,7 +387,7 @@ public class PromptEngineeringApplication {
 
 		// (SpringAI tip) Set common options for the chat client.
 		var chatClient = chatClientBuilder
-			.defaultOptions(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024).build())
+			.defaultOptions(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024))
 			.build();
 
 		// Goal: Write a storyline for a level of a first-person shooter video game.
@@ -481,7 +481,7 @@ public class PromptEngineeringApplication {
 					Classify the above email as IMPORTANT or NOT IMPORTANT. Let's
 					think step by step and explain why.
 					""").param("email", email))
-			.options(ChatOptions.builder().temperature(1.0).topK(60).maxTokens(1024).build())
+			.options(ChatOptions.builder().temperature(1.0).topK(60).maxTokens(1024))
 			.call()
 			.entity(EmailClassification.class);
 
@@ -528,7 +528,7 @@ public class PromptEngineeringApplication {
 						Classify the above email as IMPORTANT or NOT IMPORTANT. Let's
 						think step by step and explain why.
 						""").param("email", email))
-				.options(ChatOptions.builder().temperature(1.0).topK(60).maxTokens(1024).build())
+				.options(ChatOptions.builder().temperature(1.0).topK(60).maxTokens(1024))
 				.call()
 				.entity(EmailClassification.class);
 
@@ -562,7 +562,7 @@ public class PromptEngineeringApplication {
 				1. Describe the move in algebraic notation
 				2. Explain the strategic thinking behind this move
 				3. Rate the move's strength from 1-10
-				""").options(ChatOptions.builder().temperature(0.7).build()).call().content();
+				""").options(ChatOptions.builder().temperature(0.7)).call().content();
 
 		System.out.println("Initial Moves: " + initialMoves + "\n");
 
@@ -659,7 +659,7 @@ public class PromptEngineeringApplication {
 				chatbot we need various ways to order: "One Metallica t-shirt
 				size S". Generate 10 variants, with the same semantics but keep
 				the same meaning.
-				""").options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024).build()).call().content();
+				""").options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024)).call().content();
 
 		System.out.println("Variants: " + orderVariants + "\n");
 
@@ -672,7 +672,7 @@ public class PromptEngineeringApplication {
 
 					Select the instruction candidate with the highest evaluation score.
 					""").param("variants", orderVariants))
-			.options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024).build())
+			.options(ChatOptions.builder().temperature(1.0).topK(40).maxTokens(1024))
 			.call()
 			.content();
 
@@ -689,7 +689,7 @@ public class PromptEngineeringApplication {
 				Write a code snippet in Bash, which asks for a folder name.
 				Then it takes the contents of the folder and renames all the
 				files inside by prepending the name draft to the file name.
-				""").options(ChatOptions.builder().temperature(0.1).maxTokens(1024).build()).call().content();
+				""").options(ChatOptions.builder().temperature(0.1).maxTokens(1024)).call().content();
 
 		System.out.println("Output: " + output + "\n");
 
@@ -723,7 +723,7 @@ public class PromptEngineeringApplication {
 					{code}
 					```
 					""").param("code", code))
-			.options(ChatOptions.builder().temperature(0.1).maxTokens(1024).build())
+			.options(ChatOptions.builder().temperature(0.1).maxTokens(1024))
 			.call()
 			.content();
 
@@ -759,7 +759,7 @@ public class PromptEngineeringApplication {
 					Translate the below Bash code to a Python snippet:
 					{code}
 					""").param("code", bashCode))
-			.options(ChatOptions.builder().temperature(0.1).maxTokens(1024).build())
+			.options(ChatOptions.builder().temperature(0.1).maxTokens(1024))
 			.call()
 			.content();
 

@@ -57,4 +57,6 @@ Goal: Minimal "hello prompt" project for absolute beginners.
 
 ## Status
 - User approved plan on 2026-04-24
-- Ready for implementation handoff
+- Phase 1 completed on 2026-04-24
+- Build fix applied: updated `ChatClient.options(...)` and `defaultOptions(...)` calls to pass `ChatOptions.Builder` (Spring AI 2.0 API)
+- Runtime validated: `./mvnw spring-boot:run` finished with BUILD SUCCESS and "Prompt engineering patterns demonstration completed!"
