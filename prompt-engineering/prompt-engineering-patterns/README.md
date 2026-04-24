@@ -13,7 +13,7 @@ Here we shows how to translate those concepts into working Java code using Sprin
 
 #### Structure
 
-The examples follow the same structure and patterns outlined in the original Goolge Prompt Egineering guide, making it easy to reference between theory and implementation.
+The examples follow the same structure and patterns outlined in the original Google Prompt Egineering guide, making it easy to reference between theory and implementation.
 
 ## Resources
 

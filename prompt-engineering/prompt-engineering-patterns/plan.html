@@ -1,0 +1,63 @@
+<h1>Plan: Spring AI Prompt Engineering Learning Project</h1>
+<h2>Overview</h2>
+<p>5-phase progressive learning plan using the existing <code>prompt-engineering-patterns</code> project as the foundation.</p>
+<ul>
+<li>Stack: Spring Boot 4.0.1, Spring AI 2.0.0-SNAPSHOT, Anthropic Claude, Java 17</li>
+<li>ANTHROPIC_API_KEY already available in env</li>
+<li>Entry point: <code>PromptEngineeringApplication.java</code> (CommandLineRunner, ~17 patterns)</li>
+</ul>
+<hr>
+<h2>Phase 1: Run existing project (STEP 1 - READY TO EXECUTE)</h2>
+<p>Goal: Build and run the project to observe all 17 patterns working end-to-end.</p>
+<p>Steps:
+1a. Verify ANTHROPIC_API_KEY is set in env
+1b. Build: <code>./mvnw clean package -q</code> from project root
+1c. Run all patterns: <code>./mvnw spring-boot:run</code>
+1d. Or run specific group: <code>./mvnw spring-boot:run -Dspring-boot.run.arguments=basic</code></p>
+<ul>
+<li>Args: <code>basic</code>, <code>system</code>, <code>advanced</code>, <code>all</code> (default)</li>
+</ul>
+<p>Files:</p>
+<ul>
+<li><code>src/main/java/.../PromptEngineeringApplication.java</code> — main runner</li>
+<li><code>src/main/resources/application.properties</code> — API key config (reads ANTHROPIC_API_KEY)</li>
+<li><code>pom.xml</code> — Spring Boot 4.0.1, Spring AI 2.0.0-SNAPSHOT, needs snapshot repo</li>
+</ul>
+<p>Note: Uses Spring AI snapshot repo (<a href="https://repo.spring.io/snapshot">https://repo.spring.io/snapshot</a>). First build may be slow.</p>
+<h2>Phase 2: Add new prompt engineering patterns</h2>
+<p>Goal: Extend with patterns not yet covered.
+Candidates: ReAct (Reason+Act), Generated Knowledge, Directional Stimulus, Meta-prompting
+Pattern: add public method <code>pt_&lt;name&gt;(ChatClient chatClient)</code>, register in <code>runAllPatterns()</code> and <code>runAdvancedPatterns()</code>.</p>
+<h2>Phase 3: Add REST API layer</h2>
+<p>Goal: Expose each pattern as an HTTP endpoint for interactive use.</p>
+<ul>
+<li>Add <code>@RestController</code> classes per pattern category</li>
+<li>Switch <code>spring.main.web-application-type=none</code> -&gt; <code>servlet</code></li>
+<li>Each endpoint accepts user input, returns pattern output</li>
+</ul>
+<h2>Phase 4: Add better code comments / documentation</h2>
+<p>Goal: Annotate each pattern method with inline explanations for learning.</p>
+<ul>
+<li>Cross-reference Google Prompt Engineering Guide page numbers (already partially done)</li>
+<li>Add Javadoc to each <code>pt_*</code> method explaining when/why to use the technique</li>
+<li>Annotate <code>application.properties</code> with richer config explanations</li>
+</ul>
+<h2>Phase 5: Create a simpler starter project</h2>
+<p>Goal: Minimal &quot;hello prompt&quot; project for absolute beginners.</p>
+<ul>
+<li>Single <code>ChatClient</code> call demonstrating zero-shot, few-shot, and system prompt</li>
+<li>Stripped-down pom.xml</li>
+<li>README walkthrough</li>
+</ul>
+<hr>
+<h2>Decisions</h2>
+<ul>
+<li>Phases are sequential (each builds on prior)</li>
+<li>Phase 1 is non-destructive: only runs, no code changes needed</li>
+<li>API key: read from ANTHROPIC_API_KEY env var (already wired in application.properties)</li>
+</ul>
+<h2>Status</h2>
+<ul>
+<li>User approved plan on 2026-04-24</li>
+<li>Ready for implementation handoff</li>
+</ul>
