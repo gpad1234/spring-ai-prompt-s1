@@ -210,6 +210,7 @@
     <div class="search-box">
       <textarea id="prompt" placeholder="Ask anything and test your prompt..."></textarea>
       <div class="controls">
+        <input id="secret" type="password" placeholder="Prompt secret">
         <input id="system" placeholder="Optional system instruction">
         <input id="temperature" type="number" step="0.1" min="0" max="2" value="0.7" title="Temperature">
         <input id="maxTokens" type="number" min="1" max="4096" value="500" title="Max Tokens">
@@ -228,6 +229,7 @@
 
   <script>
     const promptEl = document.getElementById('prompt');
+    const secretEl = document.getElementById('secret');
     const systemEl = document.getElementById('system');
     const temperatureEl = document.getElementById('temperature');
     const maxTokensEl = document.getElementById('maxTokens');
@@ -249,7 +251,6 @@
 
     function clearAll() {
       promptEl.value = '';
-      systemEl.value = '';
       temperatureEl.value = '0.7';
       maxTokensEl.value = '500';
       setStatus('');
@@ -260,8 +261,15 @@
 
     async function runPrompt() {
       const prompt = promptEl.value.trim();
+      const secret = secretEl.value.trim();
+
       if (!prompt) {
         setStatus('Please enter a prompt first.', true);
+        return;
+      }
+
+      if (!secret) {
+        setStatus('Please enter the prompt secret.', true);
         return;
       }
 
@@ -278,7 +286,10 @@
       try {
         const response = await fetch('/api/prompt/test', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Prompt-Secret': secret
+          },
           body: JSON.stringify(payload)
         });
 
@@ -299,6 +310,14 @@
 
     runBtn.addEventListener('click', runPrompt);
     clearBtn.addEventListener('click', clearAll);
+
+    const savedSecret = localStorage.getItem('promptSecret') || '';
+    if (savedSecret) {
+      secretEl.value = savedSecret;
+    }
+    secretEl.addEventListener('input', () => {
+      localStorage.setItem('promptSecret', secretEl.value.trim());
+    });
 
     promptEl.addEventListener('keydown', (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
