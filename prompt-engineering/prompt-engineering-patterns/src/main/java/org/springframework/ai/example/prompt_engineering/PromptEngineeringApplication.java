@@ -80,6 +80,11 @@ public class PromptEngineeringApplication {
 		System.out.println("=== Running Advanced Patterns ===");
 		// 2.6 Self-consistency (simplified - just one iteration)
 		pt_self_consistency_simple(chatClient);
+		// 2.10 Additional advanced techniques
+		pt_react_prompting(chatClient);
+		pt_generated_knowledge_prompting(chatClient);
+		pt_directional_stimulus_prompting(chatClient);
+		pt_meta_prompting(chatClient);
 	}
 
 	private void runAllPatterns(ChatClient chatClient) {
@@ -122,6 +127,12 @@ public class PromptEngineeringApplication {
 
 			// 2.8 Automatic Prompt Engineering
 			pt_automatic_prompt_engineering(chatClient);
+
+			// 2.10 Additional prompting techniques
+			pt_react_prompting(chatClient);
+			pt_generated_knowledge_prompting(chatClient);
+			pt_directional_stimulus_prompting(chatClient);
+			pt_meta_prompting(chatClient);
 
 			// 2.9 Code prompting
 
@@ -678,6 +689,110 @@ public class PromptEngineeringApplication {
 
 		System.out.println("Output: " + output + "\n");
 
+	}
+
+	// 2.10.1 ReAct (Reason + Act)
+	public void pt_react_prompting(ChatClient chatClient) {
+
+		String reactPlan = chatClient.prompt().user(u -> u.text("""
+				You are helping plan a 2-day visit in {city}.
+
+				Use the ReAct format and explicitly separate:
+				Thought: your reasoning for each step
+				Action: the concrete action to take
+				Observation: what that action gives us
+
+				Finish with a Final Itinerary section containing Day 1 and Day 2.
+				""").param("city", "Amsterdam"))
+			.options(ChatOptions.builder().temperature(0.7).maxTokens(1024))
+			.call()
+			.content();
+
+		System.out.println("ReAct Output: " + reactPlan + "\n");
+	}
+
+	// 2.10.2 Generated Knowledge Prompting
+	public void pt_generated_knowledge_prompting(ChatClient chatClient) {
+
+		String knowledge = chatClient.prompt().user(u -> u.text("""
+				Generate concise background knowledge bullets for this task:
+				{task}
+
+				Return 6 bullets with practical facts only.
+				""").param("task", "Recommend an ergonomic home-office setup for a software engineer"))
+			.options(ChatOptions.builder().temperature(0.4).maxTokens(600))
+			.call()
+			.content();
+
+		String recommendation = chatClient.prompt().user(u -> u.text("""
+				Task: {task}
+				Use this generated knowledge as context:
+				{knowledge}
+
+				Produce a practical recommendation with:
+				1. Essential items
+				2. Budget tiers (low, medium, high)
+				3. Common mistakes to avoid
+				""")
+			.param("task", "Recommend an ergonomic home-office setup for a software engineer")
+			.param("knowledge", knowledge))
+			.options(ChatOptions.builder().temperature(0.5).maxTokens(900))
+			.call()
+			.content();
+
+		System.out.println("Generated Knowledge: " + knowledge + "\n");
+		System.out.println("Knowledge-Guided Output: " + recommendation + "\n");
+	}
+
+	// 2.10.3 Directional Stimulus Prompting
+	public void pt_directional_stimulus_prompting(ChatClient chatClient) {
+
+		String output = chatClient.prompt().user(u -> u.text("""
+				Write a short introduction to cloud-native Java for junior developers.
+				Directional constraints:
+				- Keep tone practical and mentor-like
+				- Include one real-world deployment example
+				- Avoid buzzwords unless explained
+				- End with a 3-step learning path
+				"""))
+			.options(ChatOptions.builder().temperature(0.6).maxTokens(700))
+			.call()
+			.content();
+
+		System.out.println("Directional Stimulus Output: " + output + "\n");
+	}
+
+	// 2.10.4 Meta-prompting
+	public void pt_meta_prompting(ChatClient chatClient) {
+
+		String draftPrompt = chatClient.prompt().user(u -> u.text("""
+				Create a high-quality prompt to generate a study guide for:
+				{topic}
+
+				The prompt should require:
+				- clear sections
+				- examples
+				- a self-check quiz
+				""").param("topic", "Spring AI ChatClient fundamentals"))
+			.options(ChatOptions.builder().temperature(0.5).maxTokens(500))
+			.call()
+			.content();
+
+		String improvedPrompt = chatClient.prompt().user(u -> u.text("""
+				Improve this prompt for clarity, constraints, and output format.
+				Original prompt:
+				{prompt}
+
+				Return:
+				1. Improved prompt
+				2. Why it is better (3 bullets)
+				""").param("prompt", draftPrompt))
+			.options(ChatOptions.builder().temperature(0.3).maxTokens(700))
+			.call()
+			.content();
+
+		System.out.println("Meta Prompt Draft: " + draftPrompt + "\n");
+		System.out.println("Meta Prompt Improved: " + improvedPrompt + "\n");
 	}
 
 	// 2.9.1 Prompts for writing code
