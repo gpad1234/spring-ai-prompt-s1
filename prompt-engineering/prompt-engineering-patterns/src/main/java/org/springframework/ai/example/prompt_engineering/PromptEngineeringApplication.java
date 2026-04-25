@@ -26,11 +26,16 @@ public class PromptEngineeringApplication {
 	public CommandLineRunner commandLineRunner(ChatClient.Builder chatClientBuilder,
 			ConfigurableApplicationContext context) {
 		return args -> {
+			if (args.length == 0) {
+				System.out.println("No CLI pattern argument provided. Web UI mode is active.");
+				return;
+			}
+
 			try {
 				ChatClient chatClient = chatClientBuilder.build();
 
-				// Check if specific pattern is requested via command line argument
-				String pattern = args.length > 0 ? args[0] : "all";
+				// Check if specific pattern is requested via command line argument.
+				String pattern = args[0];
 
 				switch (pattern.toLowerCase()) {
 					case "basic":

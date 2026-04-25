@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Search</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --card: #ffffff;
+      --text: #202124;
+      --muted: #5f6368;
+      --border: #dfe1e5;
+      --border-hover: #c7c9cc;
+      --blue: #1a73e8;
+      --green: #188038;
+      --shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top, #ffffff 0%, #f8f9fa 58%),
+        linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .app {
+      width: min(860px, 100%);
+      animation: fadeIn 300ms ease-out;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: clamp(2.1rem, 6vw, 3.8rem);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      line-height: 1.1;
+    }
+
+    .brand span:nth-child(1) { color: #4285f4; }
+    .brand span:nth-child(2) { color: #ea4335; }
+    .brand span:nth-child(3) { color: #fbbc05; }
+    .brand span:nth-child(4) { color: #4285f4; }
+    .brand span:nth-child(5) { color: #34a853; }
+    .brand span:nth-child(6) { color: #ea4335; }
+
+    .search-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 1px 3px rgba(32, 33, 36, 0.1);
+      transition: box-shadow 140ms ease, border-color 140ms ease;
+      padding: 10px 14px;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow);
+    }
+
+    textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: vertical;
+      min-height: 54px;
+      max-height: 260px;
+      font-size: 1.03rem;
+      color: var(--text);
+      background: transparent;
+      line-height: 1.45;
+    }
+
+    .controls {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr 130px 130px;
+      gap: 10px;
+    }
+
+    input,
+    button {
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 0 14px;
+      font-size: 0.95rem;
+    }
+
+    input {
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button {
+      background: #f8f9fa;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 120ms ease, background 120ms ease;
+      min-width: 138px;
+    }
+
+    button:hover {
+      border-color: #c5c7ca;
+      background: #f1f3f4;
+    }
+
+    button.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    button.primary:hover {
+      background: #155dc1;
+    }
+
+    .status {
+      min-height: 24px;
+      text-align: center;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .result {
+      margin-top: 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .result.visible {
+      display: block;
+      animation: fadeIn 220ms ease;
+    }
+
+    .result.error {
+      border-color: #ef9a9a;
+      background: #fff8f8;
+      color: #a50e0e;
+    }
+
+    .tips {
+      margin-top: 14px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        min-width: 120px;
+      }
+
+      .buttons {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1 class="brand" aria-label="Prompt Search">
+      <span>P</span><span>r</span><span>o</span><span>m</span><span>p</span><span>t</span>
+    </h1>
+
+    <div class="search-box">
+      <textarea id="prompt" placeholder="Ask anything and test your prompt..."></textarea>
+      <div class="controls">
+        <input id="system" placeholder="Optional system instruction">
+        <input id="temperature" type="number" step="0.1" min="0" max="2" value="0.7" title="Temperature">
+        <input id="maxTokens" type="number" min="1" max="4096" value="500" title="Max Tokens">
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button id="runBtn" class="primary" type="button">Prompt Search</button>
+      <button id="clearBtn" type="button">Clear</button>
+    </div>
+
+    <div id="status" class="status"></div>
+    <section id="result" class="result" aria-live="polite"></section>
+    <p class="tips">Tip: Use a system instruction to constrain tone, format, or role.</p>
+  </main>
+
+  <script>
+    const promptEl = document.getElementById('prompt');
+    const systemEl = document.getElementById('system');
+    const temperatureEl = document.getElementById('temperature');
+    const maxTokensEl = document.getElementById('maxTokens');
+    const runBtn = document.getElementById('runBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const statusEl = document.getElementById('status');
+    const resultEl = document.getElementById('result');
+
+    function setStatus(msg, isError = false) {
+      statusEl.textContent = msg;
+      statusEl.style.color = isError ? '#a50e0e' : '#5f6368';
+    }
+
+    function renderResult(text, isError = false) {
+      resultEl.textContent = text;
+      resultEl.classList.add('visible');
+      resultEl.classList.toggle('error', isError);
+    }
+
+    function clearAll() {
+      promptEl.value = '';
+      systemEl.value = '';
+      temperatureEl.value = '0.7';
+      maxTokensEl.value = '500';
+      setStatus('');
+      resultEl.classList.remove('visible', 'error');
+      resultEl.textContent = '';
+      promptEl.focus();
+    }
+
+    async function runPrompt() {
+      const prompt = promptEl.value.trim();
+      if (!prompt) {
+        setStatus('Please enter a prompt first.', true);
+        return;
+      }
+
+      const payload = {
+        prompt,
+        system: systemEl.value.trim() || null,
+        temperature: Number(temperatureEl.value || 0.7),
+        maxTokens: Number(maxTokensEl.value || 500)
+      };
+
+      runBtn.disabled = true;
+      setStatus('Running prompt...');
+
+      try {
+        const response = await fetch('/api/prompt/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok || data.error) {
+          throw new Error(data.error || 'Prompt request failed.');
+        }
+
+        renderResult(data.response || '[No response returned]');
+        setStatus('Done.');
+      } catch (err) {
+        renderResult(err.message || 'Unknown error occurred.', true);
+        setStatus('Request failed.', true);
+      } finally {
+        runBtn.disabled = false;
+      }
+    }
+
+    runBtn.addEventListener('click', runPrompt);
+    clearBtn.addEventListener('click', clearAll);
+
+    promptEl.addEventListener('keydown', (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        runPrompt();
+      }
+    });
+
+    promptEl.focus();
+  </script>
+</body>
+</html>
